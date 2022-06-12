@@ -38,7 +38,9 @@ const initialTableState: tableStateI = {
   },
 };
 
-export const $tableState = createStore<tableStateI>(initialTableState)
+export const $tableState = createStore<tableStateI>(initialTableState, {
+  name: "tableState",
+})
   .on(changeTableVisibility, (state, tableName: TableHeadersI) => {
     const currentTableState = state.tables[tableName].isVisible;
 
@@ -70,21 +72,21 @@ export const $tableState = createStore<tableStateI>(initialTableState)
     return { ...state, sortType: null, sortBy: null };
   });
 
-export const $episodeFilter = createStore<string>("").on(
+export const $episodeFilter = createStore<string>("", { name: "episodeFilter" }).on(
   changeEpisodeFilter,
   (_, name) => name
 );
-export const $season = createStore<number>(1).on(
+export const $season = createStore<number>(1, { name: "seasonNumber" }).on(
   changeSeason,
   (_, season) => season
 );
-export const $episodes = createStore<EpisodeI[]>([]).on(
+export const $episodes = createStore<EpisodeI[]>([], { name: "episodes" }).on(
   fetchEpisodes.doneData,
   (_, data) => data
 );
-export const $currentEpisode = createStore<EpisodeI | null>(null)
+export const $currentEpisode = createStore<EpisodeI | null>(null, { name: 'currentEpisode' })
   .on(fetchEpisode.doneData, (_, data) => data)
   .on(resetEpisode, () => null);
-export const $currentCharacters = createStore<CharacterI[]>([])
+export const $currentCharacters = createStore<CharacterI[]>([], { name: 'currentCharacters' })
   .on(fetchCharacters.doneData, (_, data) => data)
   .on(resetEpisode, () => []);
