@@ -1,23 +1,33 @@
 import { FC } from "react";
+
 import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+
 import { CharacterI } from "../../types";
 
-interface CharacterProps {
-  character: CharacterI,
-};
+import styles from "./Character.module.css";
 
-const Character: FC<CharacterProps> = ({ character }) => {
-  console.log(character);
-
-  return (
-    <Card style={{ width: "18rem" }} bg="light" text="dark">
-      <Card.Img variant="top" src={character.image} />
-      <Card.Title>Имя: {character.name}</Card.Title>
-      <h3>Статус: {character.status}</h3>
-      <h3>Пол: {character.gender}</h3>
-      <h3>Вид: {character.species}</h3>
-    </Card>
-  )
+interface CharacterPropsI {
+  character: CharacterI;
 }
+
+const Character: FC<CharacterPropsI> = ({ character }) => {
+  return (
+    <Card className={styles["character-card"]}>
+      <Card.Img variant='top' src={character.image} />
+      <Card.Body>
+        <Card.Title>{character.name}</Card.Title>
+      </Card.Body>
+      <ListGroup variant='flush'>
+        <ListGroup.Item>Статус: {character.status}</ListGroup.Item>
+        <ListGroup.Item>Пол: {character.gender}</ListGroup.Item>
+        <ListGroup.Item>Вид: {character.species}</ListGroup.Item>
+        <ListGroup.Item>
+          Местоположение: {character.location.name}
+        </ListGroup.Item>
+      </ListGroup>
+    </Card>
+  );
+};
 
 export { Character };

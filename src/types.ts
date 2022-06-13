@@ -1,11 +1,19 @@
 export type EpisodeI = {
   id: number;
   name: string;
-  air_date: string;
+  air_date: Date;
   episode: string;
   characters: string[];
   url: string;
   created: string;
+};
+
+export type EpisodeUII = {
+  id: number;
+  name: string;
+  air_date: string;
+  seasonEpisodeNumber: number;
+  amountOfCharacters: number;
 };
 
 export type EpisodeForSortI = {
@@ -19,7 +27,7 @@ export type EpisodeForSortI = {
 export interface tableStateI {
   sortBy: sortByI;
   sortType: sortTypeI;
-  tables: {
+  tableColumns: {
     id: {
       visibleName: string;
       isVisible: boolean;
@@ -64,7 +72,13 @@ export type CharacterI = {
   created: string;
 };
 
-export type TableHeadersI = keyof tableStateI["tables"];
+export type TableColumnsI = keyof tableStateI["tableColumns"];
 
-export type sortByI = TableHeadersI | null;
+export type sortByI = TableColumnsI | null;
 export type sortTypeI = "ascending" | "descending" | null;
+
+export type updateSortI = {
+  sortBy: sortByI;
+  sortType: sortTypeI;
+  episodes: EpisodeI[];
+};

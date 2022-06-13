@@ -1,62 +1,70 @@
-import { useStore } from "effector-react";
 import { FC, useEffect } from "react";
-import Button from "react-bootstrap/Button";
+import { useStore } from "effector-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchCharacters, fetchEpisode } from "../../state/effects";
-import { resetEpisode } from "../../state/events";
-import { $currentCharacters, $currentEpisode } from "../../state/stores";
-import { EpisodeI } from "../../types";
-import Character from "../Character";
 
-const EpisodeDetails: FC = () => {
+import CloseButton from "react-bootstrap/CloseButton";
+
+import { resetEpisode } from "../../state/events";
+import { fetchCharacters, fetchEpisode } from "../../state/effects";
+import { $currentCharacters, $currentEpisode } from "../../state/stores";
+
+import CharactersCards from "../CharactersCards";
+import Heading from "../Heading";
+import Spinner from "../Spinner";
+
+import { EpisodeI } from "../../types";
+
+import styles from "./Episode.module.css";
+
+interface EpisodeDetailsPropsI {
+  episode: EpisodeI;
+}
+
+const EpisodeDetails: FC<EpisodeDetailsPropsI> = () => {
   const characters = useStore($currentCharacters);
   const episode = useStore($currentEpisode) as EpisodeI;
-
-  const navigate = useNavigate();
+  const loadingCondition = characters.length !== 0;
+  const episodeHeading = `${episode?.name}, ${episode?.episode}`;
 
   useEffect(() => {
     fetchCharacters(episode.characters);
-  }, []);
+  }, [episode]);
 
   return (
     <div>
-      <Button onClick={() => {
-        resetEpisode();
-        navigate("/");
-      }}>Back to episodes</Button>
-      <h2>{episode.name}</h2>
-      <h3>{episode.air_date}</h3>
-      <h4>{episode.episode}</h4>
-      <h3>Characters:</h3>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {characters.map((character) => <Character character={character} />)}
-      </div>
+      <Heading text={episodeHeading} />
+      {loadingCondition ? <CharactersCards /> : <Spinner />}
     </div>
   );
 };
 
-interface LoadingI {
-  Element: typeof EpisodeDetails;
-  condition: boolean;
-}
-
-const Loading: FC<LoadingI> = ({ Element, condition }) => {
-  console.log("condition", condition);
-  return !condition ? <span>Loading</span> : <Element />;
-};
-
-const Episode: FC = (props) => {
+const Episode: FC = () => {
   const { id } = useParams();
   const episode = useStore($currentEpisode);
-  const condition = !!episode;
+  const loadingCondition = !!episode;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchEpisode(id!);
+
+    return () => resetEpisode();
   }, [id]);
 
   return (
-    <div>
-      <Loading Element={EpisodeDetails} condition={condition} />
+    <div className={styles.episode}>
+      <CloseButton
+        className={styles["close-button"]}
+        onClick={() => {
+          resetEpisode();
+          navigate("/");
+        }}
+      />
+      {loadingCondition ? (
+        <EpisodeDetails episode={episode} />
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };

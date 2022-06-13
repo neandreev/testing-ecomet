@@ -1,0 +1,8 @@
+.label-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.label-wrapper__label {
+  margin: 0 0 5px 5px;
+}

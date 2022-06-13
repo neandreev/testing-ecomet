@@ -1,0 +1,18 @@
+.table__actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.table__actions-row > * {
+  margin: 0 5px;
+}
+
+.table__actions-row > :last-child {
+  flex-grow: 1;
+}
+
+.table-column__head-cell {
+  cursor: pointer;
+}

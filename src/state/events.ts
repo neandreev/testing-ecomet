@@ -1,8 +1,8 @@
 import { createEvent } from "effector-logger";
-import { TableHeadersI } from "../types";
+import { TableColumnsI } from "../types";
 
-export const changeSeason = createEvent<number>('changeSeason');
-export const changeEpisodeFilter = createEvent<string>('changeEpisodeFilter');
-export const changeTableVisibility = createEvent<TableHeadersI>('changeTableVisibility');
-export const updateSort = createEvent<TableHeadersI>('updateSort');
+export const changeSeason = createEvent<number>('season');
+export const changeEpisodeFilter = createEvent<string>('episodeFilter');
+export const toggleTableColumn = createEvent<TableColumnsI>('tableVisibility');
+export const updateSort = createEvent<TableColumnsI>('updateSort');
 export const resetEpisode = createEvent('resetEpisode');

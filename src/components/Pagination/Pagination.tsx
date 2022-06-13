@@ -1,38 +1,36 @@
-import { useStore } from "effector-react";
 import { FC } from "react";
+import { useStore } from "effector-react";
 
-import { default as BootstrapPagination } from "react-bootstrap/Pagination";
+import BootstrapPagination from "react-bootstrap/Pagination";
+
+import { getSeasonsNumber } from "../../utils";
 
 import { changeSeason } from "../../state/events";
-import { $season } from "../../state/stores";
-import { EpisodeI } from "../../types";
+import { $season, $sourceEpisodes } from "../../state/stores";
 
-const getSeasonsNumbers = (episodes: EpisodeI[]) => episodes.reduce((seasons, episode) => {
-  const seasonNumber = parseInt(episode.episode.slice(1, 3), 10);
-  return seasons.includes(seasonNumber) ? seasons : [...seasons, seasonNumber];
-}, [] as number[])
-
-interface PaginationI {
-  episodes: EpisodeI[];
-}
-
-const Pagination: FC<PaginationI> = ({ episodes }) => {
+const Pagination: FC = () => {
   const season = useStore($season);
-  const seasonsNumbers = getSeasonsNumbers(episodes);
+  const episodes = useStore($sourceEpisodes);
+  const seasonsNumbers = getSeasonsNumber(episodes);
 
   const changeSeasonHandler = (e: any) => {
-    changeSeason(parseInt(e.target.dataset.season, 10)); 
-  }
+    changeSeason(parseInt(e.target.dataset.season, 10));
+  };
 
-  const PaginationItems = Array.from(Array(seasonsNumbers.length), (_, i) => {
-    return <BootstrapPagination.Item key={i} data-season={i + 1} active={season === i + 1} onClick={changeSeasonHandler}>{i + 1}</BootstrapPagination.Item>
+  const PaginationItems = Array.from(Array(seasonsNumbers), (_, i) => {
+    return (
+      <BootstrapPagination.Item
+        key={i}
+        data-season={i + 1}
+        active={season === i + 1}
+        onClick={changeSeasonHandler}
+      >
+        {i + 1}
+      </BootstrapPagination.Item>
+    );
   });
 
-  return (
-    <BootstrapPagination>
-      {PaginationItems}
-    </BootstrapPagination>
-  );
+  return <BootstrapPagination>{PaginationItems}</BootstrapPagination>;
 };
 
 export { Pagination };
